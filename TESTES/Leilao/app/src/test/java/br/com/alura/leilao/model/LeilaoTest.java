@@ -42,16 +42,6 @@ public class LeilaoTest {
     }
 
     @Test
-    public void deve_DevolverMaiorLance_QuandoRecebeMaisDeUmLanceEmOrdemDecrescente() {
-        console.propoe(new Lance(new Usuario("Mariana"), 1000.0));
-        console.propoe(new Lance(rafael, 200.0));
-
-        double maiorLanceDevolvido = console.getMaiorLance();
-
-        assertEquals(1000.0, maiorLanceDevolvido, DELTA);
-    }
-
-    @Test
     public void deve_DevolverMenorLance_QuandoRecebeApenasUmLance() {
         console.propoe(new Lance(rafael, 100.0));
 
@@ -68,16 +58,6 @@ public class LeilaoTest {
         double menorLanceDevolvido = console.getMenorLance();
 
         assertEquals(100.0, menorLanceDevolvido, DELTA);
-    }
-
-    @Test
-    public void deve_DevolverMenorLance_QuandoRecebeMaisDeUmLanceEmOrdemDecrescente() {
-        console.propoe(new Lance(new Usuario("Mariana"), 1000.0));
-        console.propoe(new Lance(rafael, 200.0));
-
-        double menorLanceDevolvido = console.getMenorLance();
-
-        assertEquals(200.0, menorLanceDevolvido, DELTA);
     }
 
     @Test
@@ -124,7 +104,7 @@ public class LeilaoTest {
     }
 
     @Test
-    public void deve_DevolverTresMaioresLances_QuandoRecebeMaisDeTresLances(){
+    public void deve_DevolverTresMaioresLances_QuandoRecebeMaisDeTresLances() {
         console.propoe(new Lance(rafael, 300.0));
         final Usuario MARIANA = new Usuario("Mariana");
         console.propoe(new Lance(MARIANA, 400.0));
@@ -146,5 +126,39 @@ public class LeilaoTest {
         assertEquals(700.0, tresMaioresLancesDevolvidosParaCincoLances.get(0).getValor(), DELTA);
         assertEquals(600.0, tresMaioresLancesDevolvidosParaCincoLances.get(1).getValor(), DELTA);
         assertEquals(500.0, tresMaioresLancesDevolvidosParaCincoLances.get(2).getValor(), DELTA);
+    }
+
+    @Test
+    public void deve_DevolverValorZeroParaMaiorLance_QuandoNaoHouverLance() {
+        double maiorLanceDevolvido = console.getMaiorLance();
+
+        assertEquals(0.0, maiorLanceDevolvido, DELTA);
+    }
+
+    @Test
+    public void deve_DevolverValorZeroParaMenorLance_QuandoNaoHouverLance() {
+        double menorLanceDevolvido = console.getMenorLance();
+
+        assertEquals(0.0, menorLanceDevolvido, DELTA);
+    }
+
+    @Test
+    public void naoDeve_AdicionarLance_QuandoForMenorQueOMaiorLance() {
+        console.propoe(new Lance(rafael, 400.0));
+        console.propoe(new Lance(new Usuario("Mariana"), 300.0));
+
+        int quantidadeLancesDevolvida = console.quantidadeLances();
+
+        assertEquals(1, quantidadeLancesDevolvida, DELTA);
+    }
+
+    @Test
+    public void naoDeve_AdicionarLance_QuandoForOMesmoUsuarioDoUltimoLance(){
+        console.propoe(new Lance(rafael, 400.0));
+        console.propoe(new Lance(rafael, 500.0));
+
+        int quantidadeLancesDevolvida = console.quantidadeLances();
+
+        assertEquals(1, quantidadeLancesDevolvida, DELTA);
     }
 }
