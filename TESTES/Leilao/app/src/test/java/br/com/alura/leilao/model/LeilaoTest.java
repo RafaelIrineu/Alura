@@ -11,7 +11,6 @@ public class LeilaoTest {
     public static final double DELTA = 0.0001;
     private final Leilao console = new Leilao("Console");
     private final Usuario rafael = new Usuario("Rafael");
-
     //final pois não queremos modificá-los em nenhum momento dos testes
 
     @Test
@@ -82,16 +81,45 @@ public class LeilaoTest {
     }
 
     @Test
-    public void deve_DevolverTresMaioresLances_QuandoRecebeExatosTresLances(){
-        console.propoe(new Lance(rafael,200.0));
-        console.propoe(new Lance(new Usuario("Mariana"),300.0));
-        console.propoe(new Lance(rafael,400.0));
+    public void deve_DevolverTresMaioresLances_QuandoRecebeExatosTresLances() {
+        console.propoe(new Lance(rafael, 200.0));
+        console.propoe(new Lance(new Usuario("Mariana"), 300.0));
+        console.propoe(new Lance(rafael, 400.0));
 
         List<Lance> tresMaioresLancesDevolvidos = console.tresMaioresLances();
 
-        assertEquals(3,tresMaioresLancesDevolvidos.size());
-        assertEquals(400.0,tresMaioresLancesDevolvidos.get(0).getValor(), DELTA);
-        assertEquals(300.0,tresMaioresLancesDevolvidos.get(1).getValor(), DELTA);
-        assertEquals(200.0,tresMaioresLancesDevolvidos.get(2).getValor(), DELTA);
+        assertEquals(3, tresMaioresLancesDevolvidos.size());
+        assertEquals(400.0, tresMaioresLancesDevolvidos.get(0).getValor(), DELTA);
+        assertEquals(300.0, tresMaioresLancesDevolvidos.get(1).getValor(), DELTA);
+        assertEquals(200.0, tresMaioresLancesDevolvidos.get(2).getValor(), DELTA);
+    }
+
+    @Test
+    public void deve_DevolverTresMaioresLances_QuandoNaoRecebeLances() {
+        List<Lance> tresMaioresLancesDevolvidos = console.tresMaioresLances();
+
+        assertEquals(0, tresMaioresLancesDevolvidos.size());
+    }
+
+    @Test
+    public void deve_DevolverTresMaioresLances_QuandoRecebeUmLance() {
+        console.propoe(new Lance(rafael, 200.0));
+
+        List<Lance> tresMaioresLancesDevolvidos = console.tresMaioresLances();
+
+        assertEquals(1, tresMaioresLancesDevolvidos.size());
+        assertEquals(200.0, tresMaioresLancesDevolvidos.get(0).getValor(), DELTA);
+    }
+
+    @Test
+    public void deve_DevolverTresMaioresLances_QuandoRecebeDoisLance() {
+        console.propoe(new Lance(rafael, 200.0));
+        console.propoe(new Lance(new Usuario("Mariana"), 300.0));
+
+        List<Lance> tresMaioresLancesDevolvidos = console.tresMaioresLances();
+
+        assertEquals(2, tresMaioresLancesDevolvidos.size());
+        assertEquals(300.0, tresMaioresLancesDevolvidos.get(0).getValor(), DELTA);
+        assertEquals(200.0, tresMaioresLancesDevolvidos.get(1).getValor(), DELTA);
     }
 }
