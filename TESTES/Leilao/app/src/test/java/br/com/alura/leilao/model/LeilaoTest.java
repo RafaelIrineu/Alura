@@ -141,7 +141,7 @@ public class LeilaoTest {
         console.propoe(new Lance(rafael, 700.0));
 
         final List<Lance> tresMaioresLancesDevolvidosParaCincoLances = console.tresMaioresLances();
-        
+
         assertEquals(3, tresMaioresLancesDevolvidosParaCincoLances.size());
         assertEquals(700.0, tresMaioresLancesDevolvidosParaCincoLances.get(0).getValor(), DELTA);
         assertEquals(600.0, tresMaioresLancesDevolvidosParaCincoLances.get(1).getValor(), DELTA);
