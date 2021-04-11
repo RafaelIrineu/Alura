@@ -2,6 +2,8 @@ package br.com.alura.leilao.model;
 
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class LeilaoTest {
@@ -76,5 +78,16 @@ public class LeilaoTest {
         double menorLanceDevolvido = console.getMenorLance();
 
         assertEquals(200.0, menorLanceDevolvido, 0.0001);
+    }
+
+    @Test
+    public void deve_DevolverTresMaioresLances_QuandoRecebeExatosTresLances(){
+        console.propoe(new Lance(rafael,200.0));
+        console.propoe(new Lance(new Usuario("Mariana"),300.0));
+        console.propoe(new Lance(rafael,400.0));
+
+        List<Lance> tresMaioresLancesDevolvidos = console.tresMaioresLances();
+
+        assertEquals(3,tresMaioresLancesDevolvidos.size());
     }
 }
