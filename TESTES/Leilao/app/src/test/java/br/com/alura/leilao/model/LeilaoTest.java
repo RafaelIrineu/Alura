@@ -151,23 +151,20 @@ public class LeilaoTest {
         assertEquals(0.0, menorLanceDevolvido, DELTA);
     }
 
-    @Test
+    @Test (expected = LanceMenorQueUltimoLanceException.class)
     public void naoDeve_AdicionarLance_QuandoForMenorQueOMaiorLance() {
-        exception.expect(LanceMenorQueUltimoLanceException.class);
         console.propoe(new Lance(rafael, 400.0));
         console.propoe(new Lance(new Usuario("Mariana"), 300.0));
     }
 
-    @Test
+    @Test (expected = LanceSeguidoDoMesmoUsuarioException.class)
     public void naoDeve_AdicionarLance_QuandoForOMesmoUsuarioDoUltimoLance() {
-        exception.expect(LanceSeguidoDoMesmoUsuarioException.class);
         console.propoe(new Lance(rafael, 400.0));
         console.propoe(new Lance(rafael, 500.0));
     }
 
-    @Test
+    @Test (expected = UsuarioDeuCincoLancesException.class)
     public void naoDeve_AdicionarLance_QuandoUsuarioDerCincoLances() {
-        exception.expect(UsuarioDeuCincoLancesException.class);
         final Usuario MARIANA = new Usuario("Mariana");
         final Leilao console = new LeilaoBuilder("Console")
                 .lance(rafael, 100.0)
