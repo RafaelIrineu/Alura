@@ -164,22 +164,43 @@ public class LeilaoTest {
 
     @Test
     public void naoDeve_AdicionarLance_QuandoUsuarioDerCincoLances() {
-        console.propoe(new Lance(rafael, 100.0));
         final Usuario MARIANA = new Usuario("Mariana");
-        console.propoe(new Lance(MARIANA, 200.0));
-        console.propoe(new Lance(rafael, 300.0));
-        console.propoe(new Lance(MARIANA, 400.0));
-        console.propoe(new Lance(rafael, 500.0));
-        console.propoe(new Lance(MARIANA, 600.0));
-        console.propoe(new Lance(rafael, 700.0));
-        console.propoe(new Lance(MARIANA, 800.0));
-        console.propoe(new Lance(rafael, 900.0));
-        console.propoe(new Lance(MARIANA, 1000.0));
-        console.propoe(new Lance(rafael, 1100.0));
-        console.propoe(new Lance(MARIANA, 1200.0));
+
+        final Leilao console = new LeilaoBuilder("Console")
+                .lance(rafael, 100.0)
+                .lance(MARIANA,200.0)
+                .lance(rafael, 300.0)
+                .lance(MARIANA,400.0)
+                .lance(rafael, 500.0)
+                .lance(MARIANA,600.0)
+                .lance(rafael, 700.0)
+                .lance(MARIANA,800.0)
+                .lance(rafael, 900.0)
+                .lance(MARIANA,1000.0)
+                .lance(rafael, 1100.0)
+                .lance(MARIANA,1200.0)
+                .build();
 
         int quantidadeLancesDevolvida = console.quantidadeLances();
 
         assertEquals(10, quantidadeLancesDevolvida, DELTA);
+    }
+
+    public class LeilaoBuilder {
+
+        private final Leilao leilao;
+
+        public LeilaoBuilder(String descricao) {
+            this.leilao = new Leilao(descricao);
+        }
+
+        public LeilaoBuilder lance(Usuario usuario, double valor) {
+            this.leilao.propoe(new Lance(usuario, valor));
+            return this;
+        }
+
+        public Leilao build() {
+            return leilao;
+        }
     }
 }
