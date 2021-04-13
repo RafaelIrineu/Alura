@@ -23,9 +23,7 @@ public class Leilao implements Serializable {
     }
 
     public void propoe(Lance lance) {
-
         valida(lance);
-
         lances.add(lance);
         double valorLance = lance.getValor();
 
@@ -94,12 +92,6 @@ public class Leilao implements Serializable {
         return false;
     }
 
-    private void calculaMenorLance(double valorLance) {
-        if (valorLance < menorLance) {
-            menorLance = valorLance;
-        }
-    }
-
     private void calculaMaiorLance(double valorLance) {
         if (valorLance > maiorLance) {
             maiorLance = valorLance;
@@ -126,9 +118,5 @@ public class Leilao implements Serializable {
         }
 
         return lances.subList(0, quantidadeMaximaLances);
-    }
-
-    public int quantidadeLances() {
-        return lances.size();
     }
 }

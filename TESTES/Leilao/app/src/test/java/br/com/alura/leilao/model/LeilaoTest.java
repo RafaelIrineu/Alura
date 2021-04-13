@@ -210,6 +210,15 @@ public class LeilaoTest {
                 .build();
     }
 
+    @Test
+    public void deve_formatarParaMoeda_QuandoRecebeValor(){
+        FormatadorDeMoeda formatador = new FormatadorDeMoeda();
+
+        String moedaFormatada = formatador.formatar(200.0);
+
+        assertThat(moedaFormatada, is(equalTo("R$ 200,00")));
+    }
+
     public class LeilaoBuilder {
 
         private final Leilao leilao;
