@@ -1,5 +1,6 @@
 package br.com.alura.leilao.model;
 
+import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -10,6 +11,13 @@ import br.com.alura.leilao.exception.LanceMenorQueUltimoLanceException;
 import br.com.alura.leilao.exception.LanceSeguidoDoMesmoUsuarioException;
 import br.com.alura.leilao.exception.UsuarioDeuCincoLancesException;
 
+import static org.hamcrest.CoreMatchers.both;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.number.IsCloseTo.closeTo;
 import static org.junit.Assert.*;
 
 public class LeilaoTest {
@@ -28,7 +36,10 @@ public class LeilaoTest {
         //executar a ação esperada
         String descricaoDevolvida = console.getDescricao();
         //testar o resultado esperado
-        assertEquals("Console", descricaoDevolvida);
+        //assertEquals("Console", descricaoDevolvida);
+        //assertThat(descricaoDevolvida, equalTo("Console")); ou
+        //assertThat(descricaoDevolvida, is(equalTo("Console"))); ou
+        assertThat(descricaoDevolvida, is("Console"));
     }
 
     @Test
@@ -37,7 +48,13 @@ public class LeilaoTest {
 
         double maiorLanceDevolvido = console.getMaiorLance();
 
-        assertEquals(100.0, maiorLanceDevolvido, DELTA);
+        //assertEquals(100.0, maiorLanceDevolvido, DELTA);
+        //assertThat(maiorLanceDevolvido, equalTo(100.0));
+
+        //closeTo é usado para calcular valores com pontos flutuantes
+        //assertThat(4.1 + 5.3, closeTo(4.4 + 5.0, DELTA));
+
+        assertThat(maiorLanceDevolvido, closeTo(100.0, DELTA));
     }
 
     @Test
@@ -77,16 +94,30 @@ public class LeilaoTest {
 
         List<Lance> tresMaioresLancesDevolvidos = console.tresMaioresLances();
 
-        assertEquals(3, tresMaioresLancesDevolvidos.size());
-        assertEquals(400.0, tresMaioresLancesDevolvidos.get(0).getValor(), DELTA);
-        assertEquals(300.0, tresMaioresLancesDevolvidos.get(1).getValor(), DELTA);
-        assertEquals(200.0, tresMaioresLancesDevolvidos.get(2).getValor(), DELTA);
+        //assertEquals(3, tresMaioresLancesDevolvidos.size());
+        //assertThat(tresMaioresLancesDevolvidos, hasSize(equalTo(3))); ou
+        //assertThat(tresMaioresLancesDevolvidos, hasSize(3));
+
+        //assertEquals(400.0, tresMaioresLancesDevolvidos.get(0).getValor(), DELTA);
+        //assertThat(tresMaioresLancesDevolvidos, hasItem(new Lance(rafael,400.0)));
+
+        //assertEquals(300.0, tresMaioresLancesDevolvidos.get(1).getValor(), DELTA);
+        //assertEquals(200.0, tresMaioresLancesDevolvidos.get(2).getValor(), DELTA);
+
+//        assertThat(tresMaioresLancesDevolvidos, contains(
+//                new Lance(rafael, 400.0),
+//                new Lance(new Usuario("Mariana"), 300.0),
+//                new Lance(rafael, 200.0)));
+
+        assertThat(tresMaioresLancesDevolvidos, both(Matchers.<Lance>hasSize(3)).and(contains(
+                new Lance(rafael, 400.0),
+                new Lance(new Usuario("Mariana"), 300.0),
+                new Lance(rafael, 200.0))));
     }
 
     @Test
     public void deve_DevolverTresMaioresLances_QuandoNaoRecebeLances() {
         List<Lance> tresMaioresLancesDevolvidos = console.tresMaioresLances();
-
         assertEquals(0, tresMaioresLancesDevolvidos.size());
     }
 
@@ -140,44 +171,42 @@ public class LeilaoTest {
     @Test
     public void deve_DevolverValorZeroParaMaiorLance_QuandoNaoHouverLance() {
         double maiorLanceDevolvido = console.getMaiorLance();
-
         assertEquals(0.0, maiorLanceDevolvido, DELTA);
     }
 
     @Test
     public void deve_DevolverValorZeroParaMenorLance_QuandoNaoHouverLance() {
         double menorLanceDevolvido = console.getMenorLance();
-
         assertEquals(0.0, menorLanceDevolvido, DELTA);
     }
 
-    @Test (expected = LanceMenorQueUltimoLanceException.class)
+    @Test(expected = LanceMenorQueUltimoLanceException.class)
     public void naoDeve_AdicionarLance_QuandoForMenorQueOMaiorLance() {
         console.propoe(new Lance(rafael, 400.0));
         console.propoe(new Lance(new Usuario("Mariana"), 300.0));
     }
 
-    @Test (expected = LanceSeguidoDoMesmoUsuarioException.class)
+    @Test(expected = LanceSeguidoDoMesmoUsuarioException.class)
     public void naoDeve_AdicionarLance_QuandoForOMesmoUsuarioDoUltimoLance() {
         console.propoe(new Lance(rafael, 400.0));
         console.propoe(new Lance(rafael, 500.0));
     }
 
-    @Test (expected = UsuarioDeuCincoLancesException.class)
+    @Test(expected = UsuarioDeuCincoLancesException.class)
     public void naoDeve_AdicionarLance_QuandoUsuarioDerCincoLances() {
         final Usuario MARIANA = new Usuario("Mariana");
         final Leilao console = new LeilaoBuilder("Console")
                 .lance(rafael, 100.0)
-                .lance(MARIANA,200.0)
+                .lance(MARIANA, 200.0)
                 .lance(rafael, 300.0)
-                .lance(MARIANA,400.0)
+                .lance(MARIANA, 400.0)
                 .lance(rafael, 500.0)
-                .lance(MARIANA,600.0)
+                .lance(MARIANA, 600.0)
                 .lance(rafael, 700.0)
-                .lance(MARIANA,800.0)
+                .lance(MARIANA, 800.0)
                 .lance(rafael, 900.0)
-                .lance(MARIANA,1000.0)
-                .lance(rafael,1100.0)
+                .lance(MARIANA, 1000.0)
+                .lance(rafael, 1100.0)
                 .build();
     }
 
