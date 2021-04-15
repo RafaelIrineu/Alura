@@ -16,5 +16,4 @@ public class FormatadorDeMoedaTest {
 
         assertThat(moedaFormatada, is(equalTo("R$ 200,00")));
     }
-
 }

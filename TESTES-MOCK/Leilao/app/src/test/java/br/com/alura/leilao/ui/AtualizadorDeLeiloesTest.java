@@ -1,8 +1,10 @@
-package br.com.alura.leilao.ui.activity;
+package br.com.alura.leilao.ui;
 
+import android.content.Context;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
@@ -13,26 +15,24 @@ import br.com.alura.leilao.api.retrofit.client.LeilaoWebClient;
 import br.com.alura.leilao.api.retrofit.client.RespostaListener;
 import br.com.alura.leilao.model.Leilao;
 import br.com.alura.leilao.ui.recyclerview.adapter.ListaLeilaoAdapter;
-
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ListaLeilaoActivityTest {
+public class AtualizadorDeLeiloesTest {
 
     @Mock
     private ListaLeilaoAdapter adapter;
     @Mock //queremos apenas simular
     private LeilaoWebClient client;
-
+    @Mock
+    private Context context;
     @Test
     public void deve_AtualizarListaDeLeiloes_QuandoBuscarLeiloesDaApi() {
-        ListaLeilaoActivity activity = new ListaLeilaoActivity();
-
-        //primeiro criamos o doAnswer para poder modificar o comportamento do
-        //respostaListener, e dentro dele quando o todos() for executado
-        //ele vai chamar o sucesso enviando a lista
+        AtualizadorDeLeiloes atualizador = new AtualizadorDeLeiloes();
 
         doAnswer(new Answer() {
             @Override
@@ -45,10 +45,7 @@ public class ListaLeilaoActivityTest {
             }
         }).when(client).todos(any(RespostaListener.class));
 
-        activity.buscaLeiloes(adapter, client);
-        //colocar um delay devido a chamada assincrona, para dar tempo de retornar valor
-        //Thread.sleep(2000);
-        //não precisa mais do sleep pois estamos simulando o comportamento da api
+        atualizador.buscaLeiloes(adapter, client, context);
 
         //precisamos verificar se os métodos foram chamados
         verify(client).todos(any(RespostaListener.class));
@@ -57,5 +54,24 @@ public class ListaLeilaoActivityTest {
         verify(adapter).atualiza(new ArrayList<Leilao>(Arrays.asList(
                 new Leilao("Computador"),
                 new Leilao("Carro"))));
+    }
+
+    @Test
+    public void deve_ApresentarFalha_QuandoFalharABuscaDeLeiloes(){
+        AtualizadorDeLeiloes atualizador = Mockito.spy(new AtualizadorDeLeiloes());
+        doNothing().when(atualizador).mostraMensagemDeFalha(context);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                RespostaListener<List<Leilao>> argument = invocation.getArgument(0);
+                argument.falha(anyString());
+                return null;
+            }
+        }).when(client).todos(any(RespostaListener.class));
+
+        atualizador.buscaLeiloes(adapter, client, context);
+
+        verify(atualizador).mostraMensagemDeFalha(context);
     }
 }
