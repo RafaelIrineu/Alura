@@ -39,7 +39,7 @@ public class AtualizadorDeLeiloesTest {
             @Override
             public Object answer(InvocationOnMock invocation) {
                 RespostaListener<List<Leilao>> argument = invocation.getArgument(0);
-                argument.sucesso(new ArrayList<Leilao>(Arrays.asList(
+                argument.sucesso(new ArrayList<>(Arrays.asList(
                         new Leilao("Computador"),
                         new Leilao("Carro"))));
                 return null;
@@ -52,7 +52,7 @@ public class AtualizadorDeLeiloesTest {
         verify(client).todos(any(RespostaListener.class));
 
         //precisou colocar equals e hash codes em Leilao
-        verify(adapter).atualiza(new ArrayList<Leilao>(Arrays.asList(
+        verify(adapter).atualiza(new ArrayList<>(Arrays.asList(
                 new Leilao("Computador"),
                 new Leilao("Carro"))));
     }
